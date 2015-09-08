@@ -19,18 +19,21 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
-
+//p.867 열거형
 interface INIT_MENU {
 	int INPUT=1, EXIT=2;
 }
-
+//p.867 열거형
 interface INPUT_SELECT {
 	int NORMAL=1, UNIV=2, COMPANY=3;
 }
 
+//p.490 예외처리 
 class MenuChoiceException extends Exception {
 	int wrongChoice;
 	
+	//생성자:p.379 상속과 생성자 예제
+	//생성자상속: p.381 생성자 상속
 	public MenuChoiceException(int choice) {
 		super("잘못된 선택이 이뤄졌습니다.");
 		wrongChoice = choice;
@@ -41,7 +44,8 @@ class MenuChoiceException extends Exception {
 	}	
 }
 
-
+// http://lng1982.tistory.com/150 직렬화 시리얼라이저블
+// abstract, interface p.444 ~ p.481
 class PhoneInfo implements Serializable {
 	String name;
 	String phoneNumber;
@@ -59,11 +63,14 @@ class PhoneInfo implements Serializable {
 	public String toString() {
 		return "name : " +name+ '\n'+ "phone :" +phoneNumber + '\n'; 
 	}
-
+	
+	
+	//http://docs.oracle.com/javase/8/docs/api/ 스트링의 해쉬코드 함수
 	public int hashCode() {
 		return name.hashCode();
 	}
 	
+	//p.432 모든 클래스가 상속하는 Object 클래스
 	public boolean equals(Object obj) {
 		PhoneInfo cmp=(PhoneInfo)obj;
 		if(name.compareTo(cmp.name)==0)
@@ -73,15 +80,18 @@ class PhoneInfo implements Serializable {
 	}
 }
 
+//p.376 ~p.394 상속 일반
 class PhoneUnivInfo extends PhoneInfo {
 	String major;
 	int year;
 	
+	//생성자 p.379
 	public PhoneUnivInfo(String name, String num, String major, int year) {
 		super(name, num);
 		this.major=major;
 		this.year=year;
 	}
+	
 	
 	public void showPhoneInfo() {
 		super.showPhoneInfo();
@@ -115,30 +125,35 @@ class PhoneCompanyInfo extends PhoneInfo {
 
 
 class PhoneBookManager {
+	//p.756 file클래스에 관한 설명
 	private final File dataFile = new File("PhoneBook.dat");
+	//p.628~635
 	HashSet<PhoneInfo> infoStorage = new HashSet<PhoneInfo>();
 	
 	static PhoneBookManager inst = null;
 	
-	public  static PhoneBookManager createManagerInst() {
+	public static PhoneBookManager createManagerInst() {
 		if(inst==null) 
 			inst=new PhoneBookManager();
 		
 		return inst;
 	}
 	
+	//infoStorage에 모든 데이터를 집어넣음
 	private PhoneBookManager() {
 		readFromFile();
 	}
 	
+	//p.326 ~ 332 Scanner사용법
 	private PhoneInfo readFriendInfo() {
 		System.out.print("이름 : ");
 		String name =MenuViewer.keyboard.nextLine();
-		System.out.print("전화번호 : ");
+		System.out.print("전화번호 : "); 
 		String phone =MenuViewer.keyboard.nextLine();
 		return new PhoneInfo(name, phone);
 	}
-
+	
+	//p.326 ~ 332 Scanner사용법
 	private PhoneInfo readUnivFriendInfo() {
 		System.out.print("이름 : ");
 		String name =MenuViewer.keyboard.nextLine();
@@ -157,8 +172,9 @@ class PhoneBookManager {
 		
 	}
 	
+	//p.326 ~ 332 Scanner사용법
 	private PhoneInfo readCompanyFriendInfo() {
-		System.out.print("이름 : ");
+		System.out.print("이름 : ");showWrongChoice
 		String name =MenuViewer.keyboard.nextLine();
 		
 		System.out.print("전화번호 : ");
@@ -174,11 +190,12 @@ class PhoneBookManager {
 	public void inputData() throws MenuChoiceException {
 		System.out.println("데이터 입력을 시작합니다..");
 		System.out.println("1. 일반, 2. 대학, 3. 회사");
-		System.out.print("선택>> ");
+		System.out.print("선택 >> ");
 		int choice = MenuViewer.keyboard.nextInt();
 		MenuViewer.keyboard.nextLine();
 		PhoneInfo info =null;
 		
+		//이상한 숫자 입력시 예외처리 해줌, 사용자 정의 예외 p.504
 		if(choice<INPUT_SELECT.NORMAL || choice>INPUT_SELECT.COMPANY)
 			throw new MenuChoiceException(choice);
 		
@@ -254,8 +271,9 @@ public void readFromFile() {
 		return;
 	
 	try {
-		FileInputStream file= new FileInputStream(dataFile);
-		ObjectInputStream in = new ObjectInputStream(file);
+		//p.713 스트림
+		//FileInputStream file= ;
+		ObjectInputStream in = new ObjectInputStream(new FileInputStream(dataFile));
 		
 		while(true) {
 			PhoneInfo info =(PhoneInfo)in.readObject();
@@ -275,7 +293,7 @@ public void readFromFile() {
 
 }
 
-
+//p.326 ~ 332 Scanner사용법
 class MenuViewer {
 	public static Scanner keyboard = new Scanner(System.in);
 	
@@ -333,7 +351,7 @@ class DeleteEventHandler implements ActionListener {
 			textArea.append("해당하는 데이터가 존재하지 않습니다. \n");
 	}
  }
-
+showWrongChoice
 class SearchDelFrame extends JFrame {
 	JTextField srchField=new JTextField(15);
 	JButton srchBtn =new JButton("SEARCH");
@@ -350,7 +368,7 @@ class SearchDelFrame extends JFrame {
 		setLayout(new BorderLayout());
 		
 		Border border=BorderFactory.createEtchedBorder();
-		
+		showWrongChoice
 		Border srchBorder=BorderFactory.createTitledBorder(border, "Search");
 		JPanel srchPanel=new JPanel();
 		srchPanel.setBorder(srchBorder);
@@ -383,7 +401,7 @@ class SearchDelFrame extends JFrame {
 	}
 }
 
-
+showWrongChoice
 class CM {
 	public static void main(String[] args) {
 		PhoneBookManager manager = PhoneBookManager.createManagerInst();
