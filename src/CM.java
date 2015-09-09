@@ -9,6 +9,7 @@ import javax.swing.border.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.charset.MalformedInputException;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -192,7 +193,7 @@ class PhoneBookManager {
 		System.out.println("1. 일반, 2. 대학, 3. 회사");
 		System.out.print("선택 >> ");
 		int choice = MenuViewer.keyboard.nextInt();
-		MenuViewer.keyboard.nextLine();
+		///////////////////////////////////////MenuViewer.keyboard.nextLine();
 		PhoneInfo info =null;
 		
 		//이상한 숫자 입력시 예외처리 해줌, 사용자 정의 예외 p.504
@@ -252,8 +253,11 @@ private PhoneInfo search(String name) {
 
 public void storeToFile() {
 	try {
-		FileOutputStream file=new FileOutputStream(dataFile);
-		ObjectOutputStream out =new ObjectOutputStream(file);
+		
+		//ObjectOutputStream out =new ObjectOutputStream(new FileOutputStream(dataFile));
+		
+		FileOutputStream File=new FileOutputStream(dataFile);
+		ObjectOutputStream out =new ObjectOutputStream(File);
 		
 		Iterator<PhoneInfo> itr =infoStorage.iterator();
 		while(itr.hasNext())
