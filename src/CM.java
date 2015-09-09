@@ -44,7 +44,7 @@ class MenuChoiceException extends Exception {
 	}	
 }
 
-// http://lng1982.tistory.com/150 직렬화 시리얼라이저블
+// http://lng1982.tistory.com/150 직렬화 시리얼라이저블 //p527
 // abstract, interface p.444 ~ p.481
 class PhoneInfo implements Serializable {
 	String name;
@@ -174,7 +174,7 @@ class PhoneBookManager {
 	
 	//p.326 ~ 332 Scanner사용법
 	private PhoneInfo readCompanyFriendInfo() {
-		System.out.print("이름 : ");showWrongChoice
+		System.out.print("이름 : ");
 		String name =MenuViewer.keyboard.nextLine();
 		
 		System.out.print("전화번호 : ");
@@ -351,7 +351,7 @@ class DeleteEventHandler implements ActionListener {
 			textArea.append("해당하는 데이터가 존재하지 않습니다. \n");
 	}
  }
-showWrongChoice
+
 class SearchDelFrame extends JFrame {
 	JTextField srchField=new JTextField(15);
 	JButton srchBtn =new JButton("SEARCH");
@@ -368,7 +368,6 @@ class SearchDelFrame extends JFrame {
 		setLayout(new BorderLayout());
 		
 		Border border=BorderFactory.createEtchedBorder();
-		showWrongChoice
 		Border srchBorder=BorderFactory.createTitledBorder(border, "Search");
 		JPanel srchPanel=new JPanel();
 		srchPanel.setBorder(srchBorder);
@@ -401,7 +400,7 @@ class SearchDelFrame extends JFrame {
 	}
 }
 
-showWrongChoice
+
 class CM {
 	public static void main(String[] args) {
 		PhoneBookManager manager = PhoneBookManager.createManagerInst();
