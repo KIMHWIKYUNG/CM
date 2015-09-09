@@ -1,10 +1,6 @@
 
 import java.util.Scanner;
 import java.io.*;
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-import javax.swing.border.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,13 +8,6 @@ import java.io.ObjectOutputStream;
 import java.nio.charset.MalformedInputException;
 import java.util.HashSet;
 import java.util.Iterator;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.WindowConstants;
 
 //p.867 열거형
 interface INIT_MENU {
@@ -309,106 +298,9 @@ class MenuViewer {
 	}
 }
 
-
-class SearchEventHandler implements ActionListener {
-	JTextField searchField;
-	JTextArea textArea;
-	
-	public SearchEventHandler(JTextField field, JTextArea area) {
-		searchField=field;
-		textArea=area;
-	}
-	
-	public void actionPerformed(ActionEvent e) {
-		String name = searchField.getText();
-		PhoneBookManager manager =PhoneBookManager.createManagerInst();
-		String srchResult=manager.searchData(name);
-		if(srchResult==null) {
-			textArea.append("해당하는 데이터가 존재하지 않습니다. \n");
-		}
-		else {
-			textArea.append("찾으시는 정보를 알려들비니다. \n");
-			textArea.append(srchResult);
-			textArea.append("\n");
-		}
-	}
-}
-
-
-
-class DeleteEventHandler implements ActionListener {
-	JTextField delField;
-	JTextArea textArea;
-	
-	public DeleteEventHandler(JTextField field, JTextArea area) {
-		delField=field;
-		textArea=area;
-		}
-	
-	public void actionPerformed(ActionEvent e) {
-		String name = delField.getText();
-		PhoneBookManager manager = PhoneBookManager.createManagerInst();
-		boolean isDeleted=manager.deleteData(name);
-		if(isDeleted)
-			textArea.append("데이터 삭제를 완료하였습니다. \n");
-		else 
-			textArea.append("해당하는 데이터가 존재하지 않습니다. \n");
-	}
- }
-
-class SearchDelFrame extends JFrame {
-	JTextField srchField=new JTextField(15);
-	JButton srchBtn =new JButton("SEARCH");
-	
-	JTextField delField = new JTextField(15);
-	JButton delBtn =new JButton("DEL");
-	
-	JTextArea textArea=new JTextArea(20,25);
-	
-	
-	public SearchDelFrame(String title) {
-		super(title);
-		setBounds(100,200,330,450);
-		setLayout(new BorderLayout());
-		
-		Border border=BorderFactory.createEtchedBorder();
-		Border srchBorder=BorderFactory.createTitledBorder(border, "Search");
-		JPanel srchPanel=new JPanel();
-		srchPanel.setBorder(srchBorder);
-		srchPanel.setLayout(new FlowLayout());
-		srchPanel.add(srchField);
-		srchPanel.add(srchBtn);
-		
-		
-		Border delBorder=BorderFactory.createTitledBorder(border, "Delete");
-		JPanel delPanel=new JPanel();
-		delPanel.setBorder(delBorder);
-		delPanel.setLayout(new FlowLayout());
-		delPanel.add(delField);
-		delPanel.add(delBtn);
-		
-		JScrollPane scrollTextArea=new JScrollPane(textArea);
-		Border textBorder=BorderFactory.createTitledBorder(border, "information Board");
-		scrollTextArea.setBorder(textBorder);
-		
-		add(srchPanel, BorderLayout.NORTH);
-		add(delPanel, BorderLayout.SOUTH);
-		add(scrollTextArea, BorderLayout.CENTER);
-		
-		srchBtn.addActionListener(new SearchEventHandler(srchField, textArea));
-		delBtn.addActionListener(new DeleteEventHandler(delField, textArea));
-		
-		setVisible(true);
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		
-	}
-}
-
-
 class CM {
 	public static void main(String[] args) {
 		PhoneBookManager manager = PhoneBookManager.createManagerInst();
-		SearchDelFrame winFrame=new SearchDelFrame("CM");
 		
 		int choice;
 		
