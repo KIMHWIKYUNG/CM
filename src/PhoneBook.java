@@ -1,11 +1,16 @@
+import java.sql.Statement;  
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
+//4201513008 김휘경
 import java.util.Scanner;
 import java.io.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.charset.MalformedInputException;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -55,10 +60,10 @@ class PhoneInfo implements Serializable {
 	}
 	
 	
-	//http://docs.oracle.com/javase/8/docs/api/ 스트링의 해쉬코드 함수
+/*	//http://docs.oracle.com/javase/8/docs/api/ 스트링의 해쉬코드 함수
 	public int hashCode() {
 		return name.hashCode();
-	}
+	}*/
 	
 	//p.432 모든 클래스가 상속하는 Object 클래스
 	public boolean equals(Object obj) {
@@ -116,7 +121,7 @@ class PhoneCompanyInfo extends PhoneInfo {
 
 class PhoneBookManager {
 	//p.756 file클래스에 관한 설명
-	private final File dataFile = new File("PhoneBook.dat");
+	private final File dataFile = new File("HWIKYUNG.dat");
 	//p.628~635
 	HashSet<PhoneInfo> infoStorage = new HashSet<PhoneInfo>();
 	
@@ -177,36 +182,52 @@ class PhoneBookManager {
 		return new PhoneCompanyInfo(name, phone, company);
 	}
 
-	public void inputData() throws MenuChoiceException {
+	public void inputData() throws MenuChoiceException, SQLException {
 		System.out.println("데이터 입력을 시작합니다..");
 		System.out.println("1. 일반, 2. 대학, 3. 회사");
 		System.out.print("선택 >> ");
 		int choice = MenuViewer.keyboard.nextInt();
-		///////////////////////////////////////MenuViewer.keyboard.nextLine();
+		MenuViewer.keyboard.nextLine();
 		PhoneInfo info =null;
+		
+		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/cm", "root", "1127");
+		Statement stmt = connection.createStatement();
+				
 		
 		//이상한 숫자 입력시 예외처리 해줌, 사용자 정의 예외 p.504
 		if(choice<INPUT_SELECT.NORMAL || choice>INPUT_SELECT.COMPANY)
 			throw new MenuChoiceException(choice);
+
+		try{
+			switch(choice) {
+			case INPUT_SELECT.NORMAL :
+				info=readFriendInfo();
+				stmt.executeUpdate("insert into phoneinfo values('"+info.name+"','"+info.phoneNumber+"')");
+				break;
+			case INPUT_SELECT.UNIV :
+				info=readUnivFriendInfo();
+				break;
+			case INPUT_SELECT.COMPANY :
+				info=readCompanyFriendInfo();
+				break;
+				}
+			System.out.println("데이터 입력 성공했습니다.");
+			
+			} catch(SQLException e) {
+				e.printStackTrace();
+			} finally {
+				stmt.close();
+				connection.close();
+			}	
 		
-		switch(choice) {
-		case INPUT_SELECT.NORMAL :
-			info=readFriendInfo();
-			break;
-		case INPUT_SELECT.UNIV :
-			info=readUnivFriendInfo();
-			break;
-		case INPUT_SELECT.COMPANY :
-			info=readCompanyFriendInfo();
-			break;
-		}
-		
-		boolean isAdded = infoStorage.add(info);
+		/*boolean isAdded = infoStorage.add(info);
 		if(isAdded==true)
 			System.out.println("데이터 입력이 완료되었습니다. \n");
 		else
 			System.out.println("이미 저장된 데이터입니다. \n");
-	}
+ 		*/
+}
+	
 	
 	public String searchData(String name) {
 		PhoneInfo info = search(name);
@@ -240,7 +261,7 @@ private PhoneInfo search(String name) {
 	return null;
 }
 
-public void storeToFile() {
+/*public void storeToFile() {
 	try {
 		
 		//ObjectOutputStream out =new ObjectOutputStream(new FileOutputStream(dataFile));
@@ -257,7 +278,7 @@ public void storeToFile() {
 	catch(IOException e) {
 		e.printStackTrace();
 	}
-}
+}*/
 
 public void readFromFile() {
 	if(dataFile.exists()==false)
@@ -298,8 +319,8 @@ class MenuViewer {
 	}
 }
 
-class CM {
-	public static void main(String[] args) {
+class PhoneBook {
+	public static void main(String[] args) throws SQLException {
 		PhoneBookManager manager = PhoneBookManager.createManagerInst();
 		
 		int choice;
@@ -316,12 +337,13 @@ class CM {
 				switch(choice) {
 					case INIT_MENU.INPUT :
 						manager.inputData();
+						
 						break;
 					case INIT_MENU.EXIT :
-						manager.storeToFile();
+//						manager.storeToFile();
 						System.out.println("프로그램을 종료합니다.");
 						return;
-				}
+				}		
 			}
 			catch(MenuChoiceException e) {
 				e.showWrongChoice();
@@ -332,7 +354,11 @@ class CM {
 }
 
 
-
+//String mj= info.major;
+	//int yr= info.year;
+	//stmt.executeUpdate("insert into phoneinfo values('"+info.name+"','"+info.phoneNumber+"')");
+	//stmt.executeUpdate("insert into phoneinfo values('"+mj+"','"+yr+"')");
+//
 
 
 
